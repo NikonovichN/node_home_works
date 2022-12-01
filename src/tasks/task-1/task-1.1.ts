@@ -1,7 +1,7 @@
 import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output, exit } from "node:process";
 
-import { reverseString } from "../../core/utils/reverse-string";
+import { reverseString } from "../../core";
 
 const rl = readline.createInterface({
   input,

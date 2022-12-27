@@ -6,6 +6,7 @@
   "scripts": {
     "task1": "nodemon ./src/tasks/task-1/task-1.1.ts",
     "task2": "nodemon ./src/tasks/task-1/task-1.2.ts",
+    "task3": "nodemon ./src/tasks/task-2/index.ts",
     "babel": "node_modules/.bin/babel src --out-dir compile-babel --extensions .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

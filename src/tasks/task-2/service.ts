@@ -1,6 +1,11 @@
 import express from "express";
 import { User } from "../..";
 import { defaultUsers } from "./default-user";
+import {
+  userAgeValidator,
+  userFieldsValidator,
+  passwordValidator,
+} from "./validators";
 
 const port = 3000;
 const app = express();
@@ -43,17 +48,22 @@ app.get("/users-by-login", (req, res) => {
 /**
  *  post methods
  */
-app.post("/user/:id", (req, res) => {
-  const index = users.findIndex((usr) => usr.id === req.params.id);
+app.post("/user/:id", [
+  userFieldsValidator,
+  passwordValidator,
+  userAgeValidator,
+  (req, res) => {
+    const index = users.findIndex((usr) => usr.id === req.params.id);
 
-  if (index >= 0) {
-    users[index] = req.body;
-  } else {
-    users.push(req.body);
-  }
+    if (index >= 0) {
+      users[index] = req.body;
+    } else {
+      users.push(req.body);
+    }
 
-  res.status(500).send("Ok!");
-});
+    res.status(500).send("Ok!");
+  },
+]);
 
 /**
  *  delete methods

@@ -10,7 +10,7 @@ const rl = readline.createInterface({
 
 async function askQuestion() {
   try {
-    let answer = await rl.question(
+    const answer = await rl.question(
       "Please enter your phrase (put 'q' to exit): "
     );
 

@@ -1,2 +1,2 @@
-export const reverseString = (str: String): String =>
+export const reverseString = (str: string): string =>
   str.split("").reverse().join("");

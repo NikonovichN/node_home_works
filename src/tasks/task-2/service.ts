@@ -1,6 +1,7 @@
 import express from "express";
-import { User } from "../..";
-import { defaultUsers } from "./default-user";
+import { Op } from "sequelize";
+
+import { User } from "./models";
 import {
   userAgeValidator,
   userFieldsValidator,
@@ -10,8 +11,6 @@ import {
 const port = 3000;
 const app = express();
 
-const users: Array<User> = [...defaultUsers];
-
 /**
  *  use methods
  */
@@ -20,27 +19,30 @@ app.use(express.json());
 /**
  *  get methods
  */
-app.get("/user/:id", (req, res) => {
-  const user = users.find((usr) => usr.id === req.params.id) ?? "User not find";
+app.get("/user/:id", async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findOne({ where: { id } });
 
   res.send(user);
 });
 
-app.get("/users", (req, res) => {
+app.get("/users", async (req, res) => {
+  const users = await User.findAll();
   res.send(users);
 });
 
-app.get("/users-by-login", (req, res) => {
+app.get("/users-by-login", async (req, res) => {
   const { limit, loginSubString } = req.body;
 
-  const filteredUsers = users
-    .filter((user) =>
-      user.login
-        .toLocaleLowerCase()
-        .includes(loginSubString.toLocaleLowerCase())
-    )
-    .sort()
-    .slice(0, limit);
+  const filteredUsers = await User.findAll({
+    limit,
+    order: [["login", "DESC"]],
+    where: {
+      login: {
+        [Op.like]: `%${loginSubString}%`,
+      },
+    },
+  });
 
   res.send(filteredUsers);
 });
@@ -52,29 +54,32 @@ app.post("/user/:id", [
   userFieldsValidator,
   passwordValidator,
   userAgeValidator,
-  (req, res) => {
-    const index = users.findIndex((usr) => usr.id === req.params.id);
+  async (req, res) => {
+    const { id } = req.params;
 
-    if (index >= 0) {
-      users[index] = req.body;
-    } else {
-      users.push(req.body);
+    const [, created] = await User.findOrCreate({
+      where: { id },
+      defaults: req.body,
+    });
+
+    if (!created) {
+      await User.update(req.body, { where: { id } });
     }
 
-    res.status(500).send("Ok!");
+    res.status(200).send("Ok!");
   },
 ]);
 
 /**
  *  delete methods
  */
-app.delete("/user/:id", (req, res) => {
-  const index = users.findIndex((usr) => usr.id === req.params.id);
+app.delete("/user/:id", async (req, res) => {
+  const { id } = req.params;
 
-  if (index >= 0) {
-    const user = users[index];
-    user.isDeleted = true;
-    users[index] = user;
+  const user = await User.findOne({ where: { id } });
+
+  if (user) {
+    await User.update({ is_deleted: true }, { where: { id } });
 
     res.status(200).send("Ok!");
   } else {

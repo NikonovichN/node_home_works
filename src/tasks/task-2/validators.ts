@@ -4,16 +4,14 @@ import { forgotMessage, badRequestCallback } from "./helpers";
 export const userFieldsValidator = (req, res, next) => {
   const parsedBody = req.body;
 
-  if (!parsedBody.id) {
-    badRequestCallback(res, forgotMessage("id"));
-  } else if (!parsedBody.login) {
+  if (!parsedBody.login) {
     badRequestCallback(res, forgotMessage("login"));
   } else if (!parsedBody.password) {
     badRequestCallback(res, forgotMessage("password"));
   } else if (!parsedBody.age) {
     badRequestCallback(res, forgotMessage("age"));
-  } else if (parsedBody.isDeleted === undefined) {
-    badRequestCallback(res, forgotMessage("isDeleted"));
+  } else if (parsedBody.is_deleted === undefined) {
+    badRequestCallback(res, forgotMessage("is_deleted"));
   } else next();
 };
 

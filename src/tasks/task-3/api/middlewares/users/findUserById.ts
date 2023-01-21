@@ -1,8 +1,9 @@
-import { User } from "../../../models/user";
+import { Container } from "typedi";
+import { UsersService } from "../../../services/Users";
 
 export const findUserById = async (req, res, next) => {
-  const { id } = req.params;
-  const user = await User.findOne({ where: { id } });
-  req.user = user;
+  const userServiceInstance = Container.get(UsersService);
+  req.user = await userServiceInstance.findUserById(req.params.id);
+
   next();
 };

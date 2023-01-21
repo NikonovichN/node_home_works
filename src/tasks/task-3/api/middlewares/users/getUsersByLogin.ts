@@ -1,21 +1,11 @@
-import { Op } from "sequelize";
-
-import { User } from "../../../models/user";
+import { Container } from "typedi";
+import { UsersService } from "../../../services/Users";
 
 export const getUsersByLogin = async (req, res, next) => {
   const { limit, loginSubString } = req.body;
 
-  const users = await User.findAll({
-    limit,
-    order: [["login", "DESC"]],
-    where: {
-      login: {
-        [Op.like]: `%${loginSubString}%`,
-      },
-    },
-  });
-
-  req.users = users;
+  const userServiceInstance = Container.get(UsersService);
+  req.users = await userServiceInstance.getUsersByLogin(limit, loginSubString);
 
   next();
 };

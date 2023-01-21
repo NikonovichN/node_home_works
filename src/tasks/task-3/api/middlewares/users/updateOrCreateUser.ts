@@ -1,16 +1,12 @@
-import { User } from "../../../models/user";
+import { Container } from "typedi";
+import { UsersService } from "../../../services/Users";
 
 export const updateOrCreateUser = async (req, res, next) => {
-  const { id } = req.params;
-
-  const [, created] = await User.findOrCreate({
-    where: { id },
-    defaults: req.body,
-  });
-
-  if (!created) {
-    await User.update(req.body, { where: { id } });
-  }
+  const userServiceInstance = Container.get(UsersService);
+  req.users = await userServiceInstance.updateOrCreateUser(
+    req.params.id,
+    req.body
+  );
 
   next();
 };

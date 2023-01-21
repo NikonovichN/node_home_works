@@ -1,17 +1,9 @@
-import { User } from "../../../models/user";
+import { Container } from "typedi";
+import { UsersService } from "../../../services/Users";
 
 export const deleteUser = async (req, res, next) => {
-  const { id } = req.params;
-
-  const user = await User.findOne({ where: { id } });
-
-  if (user) {
-    await User.update({ is_deleted: true }, { where: { id } });
-
-    res.status(200).send("Ok!");
-  } else {
-    res.status(404).send("User not found!");
-  }
+  const userServiceInstance = Container.get(UsersService);
+  req.isUserDeleted = await userServiceInstance.deleteUser(req.params.id);
 
   next();
 };

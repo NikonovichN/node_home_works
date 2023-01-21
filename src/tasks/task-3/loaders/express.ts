@@ -1,4 +1,5 @@
 import express from "express";
+import routes from "../api";
 
 export default ({ app }: { app: express.Application }) => {
   app.get("/status", (req, res) => {
@@ -11,6 +12,8 @@ export default ({ app }: { app: express.Application }) => {
 
   // Transforms the raw string of req.body into json
   app.use(express.json());
+
+  app.use("", routes());
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {

@@ -1,7 +1,18 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, InferAttributes } from "sequelize";
+import Container from "typedi";
 import { sequelize } from "../loaders/pgelephant";
 
-export const User = sequelize.define(
+export interface IUser extends Model<InferAttributes<IUser>, IUser> {
+  id: number;
+  login: string;
+  password: string;
+  age: number;
+  is_deleted: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export const User = sequelize.define<IUser>(
   "user",
   {
     id: {
@@ -20,3 +31,5 @@ export const User = sequelize.define(
     timestamps: false,
   }
 );
+
+Container.set("userModel", User);

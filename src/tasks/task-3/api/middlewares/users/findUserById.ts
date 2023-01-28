@@ -1,5 +1,5 @@
 import { Container } from "typedi";
-import { UsersService } from "../../../services/Users";
+import { UsersService } from "../../../services";
 
 export const findUserById = async (req, res, next) => {
   const userServiceInstance = Container.get(UsersService);

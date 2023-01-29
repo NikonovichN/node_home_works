@@ -5,7 +5,7 @@
 CREATE SEQUENCE group_id START WITH 1;
 
 CREATE TABLE groups_table (
-  id int NOT NULL DEFAULT nextval('group_id'),
+  id int unique NOT NULL DEFAULT nextval('group_id'),
   name varchar(255) NOT NULL,
   permissions varchar(255)[] NOT NULL
 );

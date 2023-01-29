@@ -5,7 +5,7 @@
 CREATE SEQUENCE user_id START WITH 1;
 
 CREATE TABLE user_table (
-  id int NOT NULL DEFAULT nextval('user_id'),
+  id int unique NOT NULL DEFAULT nextval('user_id'),
   login varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   age int NOT NULL,

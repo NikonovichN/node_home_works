@@ -1,5 +1,6 @@
 import express from "express";
-import routes from "../api";
+import morgan from "morgan";
+import routes, { morganFormat } from "../api";
 
 export default ({ app }: { app: express.Application }) => {
   app.get("/status", (req, res) => {
@@ -14,6 +15,9 @@ export default ({ app }: { app: express.Application }) => {
   app.use(express.json());
 
   app.use("", routes());
+
+  // loggers
+  app.use(morgan(morganFormat));
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {

@@ -1,7 +1,7 @@
 import { Inject, Service } from "typedi";
 import { Op } from "sequelize";
 
-import { User, IUser } from "../models/user";
+import { User, IUser } from "../models";
 
 @Service()
 export class UsersService {

@@ -1,19 +1,5 @@
 import PasswordValidator from "password-validator";
-import { forgotMessage, badRequestCallback } from "./helpers";
-
-export const userFieldsValidator = (req, res, next) => {
-  const parsedBody = req.body;
-
-  if (!parsedBody.login) {
-    badRequestCallback(res, forgotMessage("login"));
-  } else if (!parsedBody.password) {
-    badRequestCallback(res, forgotMessage("password"));
-  } else if (!parsedBody.age) {
-    badRequestCallback(res, forgotMessage("age"));
-  } else if (parsedBody.is_deleted === undefined) {
-    badRequestCallback(res, forgotMessage("is_deleted"));
-  } else next();
-};
+import { badRequestCallback } from "./helpers";
 
 export const passwordValidator = (req, res, next) => {
   const { password } = req.body;
@@ -49,15 +35,5 @@ export const passwordValidator = (req, res, next) => {
       res,
       "Password doesn't match next condition(s):\n" + reason
     );
-  }
-};
-
-export const userAgeValidator = (req, res, next) => {
-  const { age } = req.body;
-
-  if (age < 4 || age > 130) {
-    badRequestCallback(res, "Bad request! Please enter correct age!");
-  } else {
-    next();
   }
 };

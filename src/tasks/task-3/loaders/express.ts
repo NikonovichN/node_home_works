@@ -1,5 +1,8 @@
 import express from "express";
-import routes from "../api";
+import morgan from "morgan";
+import winston from "winston";
+import expressWinston from "express-winston";
+import routes, { morganFormat } from "../api";
 
 export default ({ app }: { app: express.Application }) => {
   app.get("/status", (req, res) => {
@@ -15,30 +18,21 @@ export default ({ app }: { app: express.Application }) => {
 
   app.use("", routes());
 
-  /// catch 404 and forward to error handler
-  app.use((req, res, next) => {
-    const err = new Error("Not Found");
-    err["status"] = 404;
-    next(err);
-  });
+  // loggers
+  app.use(
+    expressWinston.errorLogger({
+      transports: [new winston.transports.Console({})],
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.json()
+      ),
+    })
+  );
 
-  /// error handlers
+  app.use(morgan(morganFormat));
+
+  // Error handling
   app.use((err, req, res, next) => {
-    /**
-     * Handle 401 thrown by express-jwt library
-     */
-    if (err.name === "UnauthorizedError") {
-      return res.status(err.status).send({ message: err.message }).end();
-    }
-    return next(err);
-  });
-
-  app.use((err, req, res) => {
-    res.status(err.status || 500);
-    res.json({
-      errors: {
-        message: err.message,
-      },
-    });
+    res.status(500).send("Something broke!");
   });
 };

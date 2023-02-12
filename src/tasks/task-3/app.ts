@@ -3,6 +3,7 @@ import "reflect-metadata";
 import config from "./config";
 import express from "express";
 import loaders from "./loaders";
+import { terminate } from "./utils";
 
 async function startServer() {
   const app = express();
@@ -17,10 +18,9 @@ async function startServer() {
       ################################################
     `);
     })
-    .on("error", (err) => {
-      console.log(err);
-      process.exit(1);
-    });
+    .on("error", terminate);
+
+  process.on("uncaughtException", terminate);
 }
 
 startServer();
